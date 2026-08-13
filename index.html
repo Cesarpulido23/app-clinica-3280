@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente Clínico RIAS - Resolución 3280</title>
+    <title>Asistente Clínico RIAS - Res. 3280</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="container">
-    <h2>Asistente Clínico RIAS - Res. 3280</h2>
+    <h2>Asistente Clínico RIAS - Hospital Baudilio Acero</h2>
     
-    <div class="grid">
+    <div class="grid-form">
         <div>
-            <label for="edad">Edad del Paciente:</label>
-            <input type="number" id="edad" placeholder="Ej: 46" min="0" step="0.1">
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" placeholder="Ej: 54" min="0" step="0.1">
         </div>
         <div>
-            <label for="tipoEdad">Unidad de Medida:</label>
+            <label for="tipoEdad">Unidad:</label>
             <select id="tipoEdad">
                 <option value="anios">Años</option>
                 <option value="meses">Meses</option>
@@ -25,41 +25,54 @@
         </div>
         <div>
             <label for="sexo">Sexo Biológico:</label>
-            <select id="sexo">
+            <select id="sexo" onchange="controlarGestacion()">
                 <option value="M">Masculino</option>
                 <option value="F">Femenino</option>
             </select>
         </div>
         <div>
-            <label for="tiempoUltimoControl">Estado del Último Control:</label>
+            <label for="tiempoUltimoControl">Último Control PyP:</label>
             <select id="tiempoUltimoControl">
-                <option value="nunca">Nunca / Desconocido / No registra</option>
-                <option value="reciente_menor">Hace menos del tiempo reglamentario (Prematuro)</option>
-                <option value="en_rango">En el rango normativo adecuado</option>
-                <option value="tardio">Hace más del tiempo reglamentario (Tardío / Vencido)</option>
+                <option value="nunca">Nunca / Desconocido</option>
+                <option value="reciente_menor">Reciente (Prematuro)</option>
+                <option value="en_rango">En rango adecuado</option>
+                <option value="tardio">Vencido / Tardío</option>
             </select>
         </div>
-        <div class="full-width">
-            <label for="gestante">¿Estado de Gestación (si aplica):</label>
+        <div class="span-2" id="contenedorGestante">
+            <label for="gestante">¿Estado de Gestación:</label>
             <select id="gestante">
                 <option value="NO">No / No Aplica</option>
                 <option value="SI">Sí Gestante</option>
             </select>
         </div>
-        <div class="full-width">
-            <button onclick="procesarInterfaz()">Generar Ruta e Intervenciones RIAS</button>
+        <div class="span-2">
+            <button class="btn-primary" onclick="procesarInterfaz()">Generar Órdenes y Ruta RIAS</button>
         </div>
     </div>
 
     <div id="resultados" class="resultados-box">
-        <p style="text-align: center; color: #666; font-size: 0.9rem;">Ingrese los datos del paciente para generar la directriz clínica inmediata.</p>
+        <p style="text-align: center; color: #94a3b8; font-size: 0.9rem;">Ingrese los datos del paciente para generar la directriz clínica.</p>
     </div>
 </div>
 
-<!-- Importación de los módulos de la arquitectura -->
 <script src="database.js"></script>
 <script src="engine.js"></script>
 <script>
+    function controlarGestacion() {
+        const sexo = document.getElementById('sexo').value;
+        const contGestante = document.getElementById('contenedorGestante');
+        if (sexo === 'M') {
+            contGestante.style.display = 'none';
+            document.getElementById('gestante').value = 'NO';
+        } else {
+            contGestante.style.display = 'block';
+        }
+    }
+
+    // Ejecutar al cargar por defecto (Masculino oculta gestante)
+    window.onload = controlarGestacion;
+
     function procesarInterfaz() {
         const edadValor = parseFloat(document.getElementById('edad').value);
         const tipoEdad = document.getElementById('tipoEdad').value;
@@ -72,20 +85,21 @@
             return;
         }
 
-        // Llamada al motor clínico estructurado en engine.js
         const resultado = ejecutarMotorClinico(edadValor, tipoEdad, sexo, estadoControl, gestante);
 
         let tarjetasHTML = "";
         if (resultado.intervencionesAplicables.length === 0) {
-            tarjetasHTML = `<p style="color: #666; text-align: center;">No se encontraron intervenciones normativas estándar para este filtro exacto.</p>`;
+            tarjetasHTML = `<p style="color: #64748b; text-align: center;">No hay intervenciones estándar para este filtro exacto.</p>`;
         } else {
             resultado.intervencionesAplicables.forEach(item => {
                 tarjetasHTML += `
-                    <div class="card">
+                    <div class="card-intervencion">
                         <span class="badge">${item.cursoVida}</span>
-                        <strong style="display:block; color:var(--primary); margin: 4px 0;">${item.nombre}</strong>
-                        <span style="font-size:0.85rem; color:#555;"><strong>Frecuencia:</strong> ${item.frecuencia} | <strong>Talento:</strong> ${item.talento}</span><br>
-                        <span style="font-size:0.85rem; color:#0369a1;"><strong>CUPS:</strong> ${item.cups} | <strong>Finalidad:</strong> ${item.finalidad}</span>
+                        <h4>${item.nombre}</h4>
+                        <div class="meta-info">
+                            <strong>Frecuencia:</strong> ${item.frecuencia} | <strong>Talento:</strong> ${item.talento}<br>
+                            <strong>CUPS:</strong> ${item.cups} | <strong>Finalidad:</strong> ${item.finalidad}
+                        </div>
                     </div>
                 `;
             });
@@ -93,18 +107,20 @@
 
         let htmlFinal = `
             ${resultado.alertaIntervaloHTML}
-            <div style="margin-bottom: 15px;">
-                <label>Copiar resumen estructurado para la Historia Clínica:</label>
-                <textarea readonly>${resultado.textoHC}</textarea>
-                <button onclick="copiarTextoHC(this)" style="margin-top: 5px; background-color: #28a745; padding: 8px; font-size: 0.9rem;">📋 Copiar al Portapapeles</button>
+            <div class="seccion-ordenes">
+                <label style="margin-bottom: 8px;">📋 Órdenes Médicas para copiar en la Historia Clínica:</label>
+                <textarea class="output-hc" readonly>${resultado.textoHC}</textarea>
+                <button class="btn-copiar" onclick="copiarTextoHC(this)">Copiar al Portapapeles</button>
             </div>
-            <div style="background:#e2e8f0; padding:10px; border-radius:6px; font-size:0.85rem; margin-bottom:15px;">
-                <strong>📊 Resumen RIPS y Facturación:</strong><br>
-                - Finalidades: ${resultado.finalidadesRips.join(' | ')}<br>
-                - CIE-10 Sugerido: ${resultado.cie10Sugerido.join(' | ')}<br>
-                - Códigos CUPS Aislados:<br> ${resultado.cupsAislados.join('<br>')}
+            
+            <div style="background:#f1f5f9; padding:12px; border-radius:8px; font-size:0.85rem; margin-bottom:15px; border: 1px solid #e2e8f0;">
+                <strong>📊 Datos RIPS de Facturación:</strong><br>
+                • Finalidades: ${resultado.finalidadesRips.join(' | ')}<br>
+                • CIE-10 Sugerido: ${resultado.cie10Sugerido.join(' | ')}<br>
+                • CUPS: ${resultado.cupsAislados.join(', ')}
             </div>
-            <h4 style="margin: 10px 0; color: var(--primary);">Intervenciones Obligatorias y Tamizajes:</h4>
+
+            <h4 style="color: var(--primary); margin-bottom: 10px;">Intervenciones y Tamizajes de la Ruta:</h4>
             ${tarjetasHTML}
         `;
 
@@ -115,7 +131,7 @@
         const textarea = btn.previousElementSibling;
         textarea.select();
         navigator.clipboard.writeText(textarea.value).then(() => {
-            alert("¡Texto copiado al portapapeles con éxito!");
+            alert("¡Texto copiado con éxito!");
         });
     }
 </script>

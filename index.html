@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Clínico RIAS - Resolución 3280</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Asistente Clínico RIAS - Res. 3280</h2>
+    
+    <div class="grid">
+        <div>
+            <label for="edad">Edad del Paciente:</label>
+            <input type="number" id="edad" placeholder="Ej: 46" min="0" step="0.1">
+        </div>
+        <div>
+            <label for="tipoEdad">Unidad de Medida:</label>
+            <select id="tipoEdad">
+                <option value="anios">Años</option>
+                <option value="meses">Meses</option>
+            </select>
+        </div>
+        <div>
+            <label for="sexo">Sexo Biológico:</label>
+            <select id="sexo">
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+            </select>
+        </div>
+        <div>
+            <label for="tiempoUltimoControl">Estado del Último Control:</label>
+            <select id="tiempoUltimoControl">
+                <option value="nunca">Nunca / Desconocido / No registra</option>
+                <option value="reciente_menor">Hace menos del tiempo reglamentario (Prematuro)</option>
+                <option value="en_rango">En el rango normativo adecuado</option>
+                <option value="tardio">Hace más del tiempo reglamentario (Tardío / Vencido)</option>
+            </select>
+        </div>
+        <div class="full-width">
+            <label for="gestante">¿Estado de Gestación (si aplica):</label>
+            <select id="gestante">
+                <option value="NO">No / No Aplica</option>
+                <option value="SI">Sí Gestante</option>
+            </select>
+        </div>
+        <div class="full-width">
+            <button onclick="procesarInterfaz()">Generar Ruta e Intervenciones RIAS</button>
+        </div>
+    </div>
+
+    <div id="resultados" class="resultados-box">
+        <p style="text-align: center; color: #666; font-size: 0.9rem;">Ingrese los datos del paciente para generar la directriz clínica inmediata.</p>
+    </div>
+</div>
+
+<!-- Importación de los módulos de la arquitectura -->
+<script src="database.js"></script>
+<script src="engine.js"></script>
+<script>
+    function procesarInterfaz() {
+        const edadValor = parseFloat(document.getElementById('edad').value);
+        const tipoEdad = document.getElementById('tipoEdad').value;
+        const sexo = document.getElementById('sexo').value;
+        const estadoControl = document.getElementById('tiempoUltimoControl').value;
+        const gestante = document.getElementById('gestante').value;
+
+        if (isNaN(edadValor) || edadValor < 0) {
+            alert("Por favor, ingrese una edad válida.");
+            return;
+        }
+
+        // Llamada al motor clínico estructurado en engine.js
+        const resultado = ejecutarMotorClinico(edadValor, tipoEdad, sexo, estadoControl, gestante);
+
+        let tarjetasHTML = "";
+        if (resultado.intervencionesAplicables.length === 0) {
+            tarjetasHTML = `<p style="color: #666; text-align: center;">No se encontraron intervenciones normativas estándar para este filtro exacto.</p>`;
+        } else {
+            resultado.intervencionesAplicables.forEach(item => {
+                tarjetasHTML += `
+                    <div class="card">
+                        <span class="badge">${item.cursoVida}</span>
+                        <strong style="display:block; color:var(--primary); margin: 4px 0;">${item.nombre}</strong>
+                        <span style="font-size:0.85rem; color:#555;"><strong>Frecuencia:</strong> ${item.frecuencia} | <strong>Talento:</strong> ${item.talento}</span><br>
+                        <span style="font-size:0.85rem; color:#0369a1;"><strong>CUPS:</strong> ${item.cups} | <strong>Finalidad:</strong> ${item.finalidad}</span>
+                    </div>
+                `;
+            });
+        }
+
+        let htmlFinal = `
+            ${resultado.alertaIntervaloHTML}
+            <div style="margin-bottom: 15px;">
+                <label>Copiar resumen estructurado para la Historia Clínica:</label>
+                <textarea readonly>${resultado.textoHC}</textarea>
+                <button onclick="copiarTextoHC(this)" style="margin-top: 5px; background-color: #28a745; padding: 8px; font-size: 0.9rem;">📋 Copiar al Portapapeles</button>
+            </div>
+            <div style="background:#e2e8f0; padding:10px; border-radius:6px; font-size:0.85rem; margin-bottom:15px;">
+                <strong>📊 Resumen RIPS y Facturación:</strong><br>
+                - Finalidades: ${resultado.finalidadesRips.join(' | ')}<br>
+                - CIE-10 Sugerido: ${resultado.cie10Sugerido.join(' | ')}<br>
+                - Códigos CUPS Aislados:<br> ${resultado.cupsAislados.join('<br>')}
+            </div>
+            <h4 style="margin: 10px 0; color: var(--primary);">Intervenciones Obligatorias y Tamizajes:</h4>
+            ${tarjetasHTML}
+        `;
+
+        document.getElementById('resultados').innerHTML = htmlFinal;
+    }
+
+    function copiarTextoHC(btn) {
+        const textarea = btn.previousElementSibling;
+        textarea.select();
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert("¡Texto copiado al portapapeles con éxito!");
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,118 +1,105 @@
 const baseDatos3280 = [
-    // --- PRIMERA INFANCIA (0 a 5 años) ---
-    {
-        min: 0, max: 0.1, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración integral por Medicina General / Pediatría (Recién Nacido)",
-        tipo: "Primera Infancia", freq: "Recién nacido", cups: "890201"
-    },
-    {
-        min: 0.1, max: 5, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración Integral de la Salud (Primera Infancia)",
-        tipo: "Primera Infancia", freq: "Seguimiento periódico según esquema normativo", cups: "890201"
-    },
-    {
-        min: 0.5, max: 2, sexo: 'A', gestante: 'TODOS',
-        nombre: "Administración de Micronutrientes en Polvo / Hierro elemental",
-        tipo: "Protección Específica", freq: "Según edad y riesgo nutricional", cups: "B03AA0701"
-    },
-    {
-        min: 1, max: 5, sexo: 'A', gestante: 'TODOS',
-        nombre: "Desparasitación intestinal (Albendazol / Mebendazol)",
-        tipo: "Protección Específica", freq: "Semestral a partir del año de edad", cups: "P02CA0301"
-    },
-
-    // --- INFANCIA (6 a 11 años) ---
-    {
-        min: 6, max: 11, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración Integral de la Salud (Infancia)",
-        tipo: "Infancia", freq: "Anual", cups: "890201"
-    },
-    {
-        min: 10, max: 13, sexo: 'F', gestante: 'TODOS',
-        nombre: "Tamizaje para anemia - Hemoglobina y hematocrito",
-        tipo: "Detección Temprana", freq: "Una sola vez en este rango de edad", cups: "902213"
-    },
-
-    // --- ADOLESCENCIA (12 a 17 años) ---
-    {
-        min: 12, max: 17, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración Integral de la Salud (Adolescencia)",
-        tipo: "Adolescencia", freq: "Anual", cups: "890201"
-    },
-    {
-        min: 12, max: 17, sexo: 'A', gestante: 'TODOS',
-        nombre: "Prueba rápida treponémica para sífilis y Prueba rápida para VIH",
-        tipo: "Detección Temprana / ITS", freq: "Según exposición al riesgo", cups: "906039 / 906249"
-    },
-    {
-        min: 14, max: 17, sexo: 'F', gestante: 'TODOS',
-        nombre: "Tamizaje para anemia (Hemoglobina y hematocrito)",
-        tipo: "Detección Temprana", freq: "Una vez entre 14 y 17 años", cups: "902213"
-    },
-
-    // --- JUVENTUD (18 a 28 años) ---
-    {
-        min: 18, max: 28, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración Integral de la Salud (Juventud)",
-        tipo: "Juventud", freq: "Cada 2 años", cups: "890201"
-    },
-    {
-        min: 18, max: 28, sexo: 'A', gestante: 'TODOS',
-        nombre: "Tamizaje de riesgo cardiovascular (Glicemia basal, perfil lipídico, creatinina, uroanálisis)",
-        tipo: "Detección Temprana", freq: "Según clasificación del riesgo", cups: "903841 / 903856 / 903825 / 907106"
-    },
-
     // --- ADULTEZ (29 a 59 años) ---
     {
         min: 29, max: 59, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración Integral de la Salud (Adultez)",
-        tipo: "Adultez", freq: "Cada 3 años", cups: "890201"
+        categoria: "Valoración Integral",
+        nombre: "Atención en salud por medicina general o medicina familiar",
+        frecuencia: "Cada 3 años",
+        cups: "890201",
+        finalidad: "07 - Alteraciones del Adulto",
+        cie10: "Z000",
+        talento: "Profesional en medicina general o especialista en medicina familiar"
     },
     {
         min: 29, max: 59, sexo: 'A', gestante: 'TODOS',
-        nombre: "Tamizaje de riesgo cardiovascular (Glucemia, perfil lipídico, creatinina, uroanálisis)",
-        tipo: "Detección Temprana", freq: "Quinquenal", cups: "903841 / 903856 / 903825 / 907106"
+        categoria: "Valoración Integral",
+        nombre: "Atención en salud bucal por profesional de odontología",
+        frecuencia: "Una vez cada dos años",
+        cups: "890203",
+        finalidad: "07 - Alteraciones del Adulto",
+        cie10: "Z000",
+        talento: "Profesional en odontología"
+    },
+    {
+        min: 29, max: 59, sexo: 'A', gestante: 'TODOS',
+        categoria: "Tamizaje Cardiovascular",
+        nombre: "Tamizaje de riesgo cardiovascular (Glicemia basal, Perfil lipídico, Creatinina, Uroanálisis)",
+        frecuencia: "Quinquenal / Según factor de riesgo",
+        cups: "903841 (Glicemia) / 903856 (Perfil lipídico) / 903825 (Creatinina) / 907106 (Uroanálisis)",
+        finalidad: "07 - Alteraciones del Adulto",
+        cie10: "Z017",
+        talento: "Profesional en medicina general o enfermería"
     },
     {
         min: 25, max: 65, sexo: 'F', gestante: 'TODOS',
+        categoria: "Tamizaje Oncológico",
         nombre: "Tamizaje de cáncer de cuello uterino (Citología cervicouterina o ADN-VPH)",
-        tipo: "Tamizaje Oncológico", freq: "Según esquema normativo (1-3-3 o quinquenal)", cups: "892901 / 908436"
+        frecuencia: "Esquema 1-3-3 o ADN-VPH cada 5 años según edad",
+        cups: "892901 (Citología) / 908436 (ADN-VPH)",
+        finalidad: "13 - Detección temprana de cáncer de cuello uterino",
+        cie10: "Z124",
+        talento: "Profesional en medicina general, enfermería o bacteriología"
     },
     {
         min: 50, max: 59, sexo: 'F', gestante: 'TODOS',
+        categoria: "Tamizaje Oncológico",
         nombre: "Mamografía bilateral de tamizaje",
-        tipo: "Tamizaje Oncológico", freq: "Cada 2 años a partir de los 50 años", cups: "876802"
+        frecuencia: "Cada 2 años a partir de los 50 años",
+        cups: "876802",
+        finalidad: "14 - Detección temprana de cáncer de mama",
+        cie10: "Z123",
+        talento: "Especialista en radiología o imágenes diagnósticas"
     },
     {
         min: 50, max: 59, sexo: 'M', gestante: 'TODOS',
+        categoria: "Tamizaje Oncológico",
         nombre: "Tamizaje para cáncer de próstata (Antígeno específico - PSA)",
-        tipo: "Tamizaje Oncológico", freq: "Cada 5 años a partir de los 50 años", cups: "906610"
+        frecuencia: "Cada 5 años a partir de los 50 años",
+        cups: "906610",
+        finalidad: "15 - Detección temprana de cáncer de próstata",
+        cie10: "Z125",
+        talento: "Profesional en medicina general o urología"
     },
     {
         min: 50, max: 59, sexo: 'A', gestante: 'TODOS',
+        categoria: "Tamizaje Oncológico",
         nombre: "Tamizaje para cáncer de colon y recto (Sangre oculta en materia fecal por inmunoquímica)",
-        tipo: "Tamizaje Oncológico", freq: "Cada 2 años a partir de los 50 años", cups: "907009"
+        frecuencia: "Cada 2 años a partir de los 50 años",
+        cups: "907009",
+        finalidad: "16 - Detección temprana de cáncer de colon y recto",
+        cie10: "Z121",
+        talento: "Profesional en medicina general o enfermería"
     },
 
     // --- VEJEZ (60 años y más) ---
     {
         min: 60, max: 120, sexo: 'A', gestante: 'TODOS',
-        nombre: "Valoración Integral de la Salud en el Vejez",
-        tipo: "Vejez", freq: "Cada 3 años", cups: "890201"
-    },
-    {
-        min: 60, max: 120, sexo: 'A', gestante: 'TODOS',
-        nombre: "Tamizajes metabólicos y renales de control",
-        tipo: "Detección Temprana", freq: "Cada 5 años hasta los 75 años", cups: "903841 / 903856 / 903825 / 907106"
+        categoria: "Valoración Integral",
+        nombre: "Atención en salud en el vejez por medicina general o familiar",
+        frecuencia: "Cada 3 años",
+        cups: "890201",
+        finalidad: "07 - Alteraciones del Adulto",
+        cie10: "Z000",
+        talento: "Médico general o familiar"
     },
     {
         min: 60, max: 69, sexo: 'F', gestante: 'TODOS',
+        categoria: "Tamizaje Oncológico",
         nombre: "Mamografía bilateral de tamizaje",
-        tipo: "Tamizaje Oncológico", freq: "Cada 2 años hasta los 69 años", cups: "876802"
+        frecuencia: "Cada 2 años hasta los 69 años",
+        cups: "876802",
+        finalidad: "14 - Detección temprana de cáncer de mama",
+        cie10: "Z123",
+        talento: "Especialista en radiología"
     },
     {
         min: 60, max: 75, sexo: 'M', gestante: 'TODOS',
+        categoria: "Tamizaje Oncológico",
         nombre: "Tamizaje para cáncer de próstata (PSA)",
-        tipo: "Tamizaje Oncológico", freq: "Cada 5 años hasta los 75 años", cups: "906610"
+        frecuencia: "Cada 5 años hasta los 75 años",
+        cups: "906610",
+        finalidad: "15 - Detección temprana de cáncer de próstata",
+        cie10: "Z125",
+        talento: "Médico general o urología"
     }
 ];

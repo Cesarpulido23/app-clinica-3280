@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Asistente Clínico 3280</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            background-color: #f4f7f6; 
+            color: #333; 
+            padding: 20px; 
+            margin: 0; 
+        }
+        .contenedor { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        h2 { color: #0056b3; margin-top: 0; }
+        .grupo-input { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+        }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #0056b3; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-bottom: 10px;
+        }
+        .btn-secundario { background-color: #6c757d; }
+    </style>
+</head>
+<body>
+
+    <div class="contenedor">
+        <h2>Asistente RIAS - 3280</h2>
+        
+        <div class="grupo-input">
+            <label for="edadPaciente">Edad exacta (años):</label>
+            <input type="number" id="edadPaciente" placeholder="Ej: 45" min="0">
+        </div>
+
+        <div class="grupo-input">
+            <label for="sexoPaciente">Sexo biológico:</label>
+            <select id="sexoPaciente">
+                <option value="F">Femenino</option>
+                <option value="M">Masculino</option>
+            </select>
+        </div>
+
+        <button onclick="buscarRuta()">Ver Intervenciones 3280</button>
+        <button class="btn-secundario" onclick="abrirEscalas()">Módulo de Escalas</button>
+        
+        <!-- Aquí la app inyectará los resultados después -->
+        <div id="resultados" style="margin-top: 20px;"></div>
+    </div>
+
+</body>
+</html>
